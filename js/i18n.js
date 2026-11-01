@@ -54,6 +54,15 @@
       var p = PATTERNS[i];
       if (p[0].test(core)) return bnDigits(core.replace(p[0], p[1]));
     }
+    // "Gulshan, Dhaka" / "Dhaka, Bangladesh": translate each comma-separated part we know
+    if (core.length < 120 && core.indexOf(',') > 0) {
+      var parts = core.split(/\s*,\s*/);
+      if (parts.length <= 6) {
+        var hits = 0;
+        var outp = parts.map(function (x) { var h = lookup(x); if (h !== null) { hits++; return h; } return x; });
+        if (hits * 2 >= parts.length) return outp.join(', ');
+      }
+    }
     return null;
   }
 

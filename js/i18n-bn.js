@@ -1271,3 +1271,114 @@ window.DV_BN_PATTERNS.push(
   [/^(\d+)\s*(?:m|min|mins) ago(.*)$/i, "$1 মিনিট আগে$2"],
   [/^(\d+)\s*(?:s|sec) ago(.*)$/i, "$1 সেকেন্ড আগে$2"]
 );
+
+/* ===================== Part 10: city / district / division names ===================== */
+Object.assign(window.DV_BN, {
+  "Bangladesh": "বাংলাদেশ",
+  /* 64 districts (+ alternate spellings found in the site data) */
+  "Bagerhat": "বাগেরহাট", "Bandarban": "বান্দরবান", "Barguna": "বরগুনা", "Barisal": "বরিশাল", "Barishal": "বরিশাল",
+  "Bhola": "ভোলা", "Bogura": "বগুড়া", "Brahmanbaria": "ব্রাহ্মণবাড়িয়া", "Chandpur": "চাঁদপুর",
+  "Chapainababganj": "চাঁপাইনবাবগঞ্জ", "Chapainawabganj": "চাঁপাইনবাবগঞ্জ", "Chattogram": "চট্টগ্রাম", "Chittagong": "চট্টগ্রাম",
+  "Chuadanga": "চুয়াডাঙ্গা", "Comilla": "কুমিল্লা", "Cumilla": "কুমিল্লা", "Cox's Bazar": "কক্সবাজার", "Dhaka": "ঢাকা",
+  "Dinajpur": "দিনাজপুর", "Faridpur": "ফরিদপুর", "Feni": "ফেনী", "Gaibandha": "গাইবান্ধা", "Gazipur": "গাজীপুর",
+  "Gopalganj": "গোপালগঞ্জ", "Habiganj": "হবিগঞ্জ", "Jamalpur": "জামালপুর", "Jashore": "যশোর", "Jessore": "যশোর",
+  "Jhalokati": "ঝালকাঠি", "Jhenaidah": "ঝিনাইদহ", "Joypurhat": "জয়পুরহাট", "Khagrachari": "খাগড়াছড়ি", "Khagrachhari": "খাগড়াছড়ি",
+  "Khulna": "খুলনা", "Kishoreganj": "কিশোরগঞ্জ", "Kurigram": "কুড়িগ্রাম", "Kushtia": "কুষ্টিয়া", "Lakshmipur": "লক্ষ্মীপুর",
+  "Lalmonirhat": "লালমনিরহাট", "Madaripur": "মাদারীপুর", "Magura": "মাগুরা", "Manikganj": "মানিকগঞ্জ", "Meherpur": "মেহেরপুর",
+  "Moulvibazar": "মৌলভীবাজার", "Munshiganj": "মুন্সীগঞ্জ", "Mymensingh": "ময়মনসিংহ", "Naogaon": "নওগাঁ", "Narail": "নড়াইল",
+  "Narayanganj": "নারায়ণগঞ্জ", "Narsingdi": "নরসিংদী", "Natore": "নাটোর", "Netrakona": "নেত্রকোনা", "Netrokona": "নেত্রকোনা",
+  "Nilphamari": "নীলফামারী", "Noakhali": "নোয়াখালী", "Pabna": "পাবনা", "Panchagarh": "পঞ্চগড়", "Patuakhali": "পটুয়াখালী",
+  "Pirojpur": "পিরোজপুর", "Rajbari": "রাজবাড়ী", "Rajshahi": "রাজশাহী", "Rangamati": "রাঙামাটি", "Rangpur": "রংপুর",
+  "Satkhira": "সাতক্ষীরা", "Shariatpur": "শরীয়তপুর", "Sherpur": "শেরপুর", "Sirajganj": "সিরাজগঞ্জ", "Sunamganj": "সুনামগঞ্জ",
+  "Sylhet": "সিলেট", "Tangail": "টাঙ্গাইল", "Thakurgaon": "ঠাকুরগাঁও",
+  /* well-known areas */
+  "Savar": "সাভার", "Mirpur": "মিরপুর", "Gulshan": "গুলশান", "Banani": "বনানী", "Uttara": "উত্তরা", "Dhanmondi": "ধানমন্ডি",
+  "Mohammadpur": "মোহাম্মদপুর", "Motijheel": "মতিঝিল", "Tejgaon": "তেজগাঁও", "Badda": "বাড্ডা", "Rampura": "রামপুরা",
+  "Keraniganj": "কেরানীগঞ্জ", "Sadar": "সদর", "Savar Upazila": "সাভার উপজেলা"
+});
+window.DV_BN_PATTERNS.push(
+  [/^(.+?) Division$/, function (m, n) { var t = window.DVI18N && window.DVI18N.t(n); return (t && t !== n) ? t + " বিভাগ" : m; }],
+  [/^(.+?) District$/, function (m, n) { var t = window.DVI18N && window.DVI18N.t(n); return (t && t !== n) ? t + " জেলা" : m; }],
+  [/^(.+?) City$/,     function (m, n) { var t = window.DVI18N && window.DVI18N.t(n); return (t && t !== n) ? t + " শহর" : m; }],
+  [/^(.+?) Upazila$/,  function (m, n) { var t = window.DVI18N && window.DVI18N.t(n); return (t && t !== n) ? t + " উপজেলা" : m; }]
+);
+
+/* ===================== Part 11: upazila names (495 on the map) ===================== */
+(function () {
+  var raw = [
+    /* Bagerhat */ "Chitalmari=চিতলমারী;Fakirhat=ফকিরহাট;Kachua=কচুয়া;Mollahat=মোল্লাহাট;Mongla=মোংলা;Morelganj=মোড়েলগঞ্জ;Rampal=রামপাল;Sharankhola=শরণখোলা",
+    /* Bandarban */ "Alikadam=আলীকদম;Lama=লামা;Naikkhongchhari=নাইক্ষ্যংছড়ি;Rowangchhari=রোয়াংছড়ি;Ruma=রুমা;Thanchi=থানচি",
+    /* Barguna */ "Amtali=আমতলী;Bamna=বামনা;Betagi=বেতাগী;Patharghata=পাথরঘাটা;Taltali=তালতলী",
+    /* Barishal */ "Agailjhara=আগৈলঝাড়া;Babuganj=বাবুগঞ্জ;Bakerganj=বাকেরগঞ্জ;Banaripara=বানারীপাড়া;Gaurnadi=গৌরনদী;Hijla=হিজলা;Mehendiganj=মেহেন্দিগঞ্জ;Muladi=মুলাদী;Ujirpur=উজিরপুর;Barishal Sadar (Kotwali)=বরিশাল সদর (কোতোয়ালী)",
+    /* Bhola */ "Borhanuddin=বোরহানউদ্দিন;Charfasson=চরফ্যাশন;Daulatkhan=দৌলতখান;Lalmohan=লালমোহন;Monpura=মনপুরা;Tazumuddin=তজুমদ্দিন",
+    /* Bogura */ "Adamdighi=আদমদীঘি;Dhunat=ধুনট;Dupchachia=দুপচাঁচিয়া;Gabtali=গাবতলী;Kahaloo=কাহালু;Nandigram=নন্দীগ্রাম;Sariakandi=সারিয়াকান্দি;Shajahanpur=শাজাহানপুর;Shibganj=শিবগঞ্জ;Sonatala=সোনাতলা",
+    /* Brahmanbaria */ "Akhaura=আখাউড়া;Ashuganj=আশুগঞ্জ;Banchharampur=বাঞ্ছারামপুর;Bijoynagar=বিজয়নগর;Kasba=কসবা;Nabinagar=নবীনগর;Nasirnagar=নাসিরনগর;Sarail=সরাইল",
+    /* Chandpur */ "Faridganj=ফরিদগঞ্জ;Haimchar=হাইমচর;Hajiganj=হাজীগঞ্জ;Matlab Dakkhin=মতলব দক্ষিণ;Matlab Uttar=মতলব উত্তর;Shahrasti=শাহরাস্তি",
+    /* Chapainawabganj */ "Bholahat=ভোলাহাট;Gomastapur=গোমস্তাপুর;Nachole=নাচোল",
+    /* Chattogram */ "Anwara=আনোয়ারা;Banshkhali=বাঁশখালী;Boalkhali=বোয়ালখালী;Chandanaish=চন্দনাইশ;Fatikchhari=ফটিকছড়ি;Hathazari=হাটহাজারী;Karnaphuli=কর্ণফুলী;Lohagara=লোহাগাড়া;Mirsarai=মীরসরাই;Patiya=পটিয়া;Rangunia=রাঙ্গুনিয়া;Raozan=রাউজান;Sandwip=সন্দ্বীপ;Satkania=সাতকানিয়া;Sitakunda=সীতাকুণ্ড",
+    /* Chuadanga */ "Alamdanga=আলমডাঙ্গা;Damurhuda=দামুড়হুদা;Jibannagar=জীবননগর",
+    /* Cox's Bazar */ "Chakaria=চকরিয়া;Eidgaon=ঈদগাঁও;Kutubdia=কুতুবদিয়া;Maheshkhali=মহেশখালী;Pekua=পেকুয়া;Ramu=রামু;Teknaf=টেকনাফ;Ukhia=উখিয়া;Coxs Bazar=কক্সবাজার;Coxs Bazar Sadar=কক্সবাজার সদর",
+    /* Cumilla */ "Adarsha Sadar=আদর্শ সদর;Barura=বরুড়া;Brahmanpara=ব্রাহ্মণপাড়া;Burichang=বুড়িচং;Chandina=চান্দিনা;Chauddagram=চৌদ্দগ্রাম;Daudkandi=দাউদকান্দি;Debidwar=দেবিদ্বার;Homna=হোমনা;Laksam=লাকসাম;Lalmai=লালমাই;Manoharganj=মনোহরগঞ্জ;Meghna=মেঘনা;Muradnagar=মুরাদনগর;Nangalkot=নাঙ্গলকোট;Sadar Dakkhin=সদর দক্ষিণ;Titas=তিতাস",
+    /* Dhaka */ "Dhamrai=ধামরাই;Dohar=দোহার;Nawabganj=নবাবগঞ্জ;Dhaka North City Corporation=ঢাকা উত্তর সিটি করপোরেশন;Dhaka South City Corporation=ঢাকা দক্ষিণ সিটি করপোরেশন",
+    /* Dinajpur */ "Birampur=বিরামপুর;Birganj=বীরগঞ্জ;Birol=বিরল;Bochaganj=বোচাগঞ্জ;Chirirbandar=চিরিরবন্দর;Fulbari=ফুলবাড়ী;Ghoraghat=ঘোড়াঘাট;Hakimpur=হাকিমপুর;Kaharole=কাহারোল;Khansama=খানসামা;Nababganj=নবাবগঞ্জ;Parbatipur=পার্বতীপুর",
+    /* Faridpur */ "Alfadanga=আলফাডাঙ্গা;Bhanga=ভাঙ্গা;Boalmari=বোয়ালমারী;Char Bhadrasan=চরভদ্রাসন;Madhukhali=মধুখালী;Nagarkanda=নগরকান্দা;Sadarpur=সদরপুর;Saltha=সালথা",
+    /* Feni */ "Chhagalnaiya=ছাগলনাইয়া;Daganbhuiyan=দাগনভূঞা;Fulgazi=ফুলগাজী;Parashuram=পরশুরাম;Sonagazi=সোনাগাজী",
+    /* Gaibandha */ "Fulchhari=ফুলছড়ি;Gobindaganj=গোবিন্দগঞ্জ;Palashbari=পলাশবাড়ী;Sadullapur=সাদুল্লাপুর;Saghata=সাঘাটা;Sundarganj=সুন্দরগঞ্জ",
+    /* Gazipur */ "Kaliakair=কালিয়াকৈর;Kaliganj=কালীগঞ্জ;Kapasia=কাপাসিয়া;Sreepur=শ্রীপুর",
+    /* Gopalganj */ "Kashiani=কাশিয়ানী;Kotalipara=কোটালীপাড়া;Muksudpur=মুকসুদপুর;Tungipara=টুঙ্গিপাড়া",
+    /* Habiganj */ "Ajmiriganj=আজমিরীগঞ্জ;Bahubal=বাহুবল;Baniachong=বানিয়াচং;Chunarughat=চুনারুঘাট;Lakhai=লাখাই;Madhabpur=মাধবপুর;Nabiganj=নবীগঞ্জ;Shayestaganj=শায়েস্তাগঞ্জ",
+    /* Jamalpur */ "Bakshiganj=বকশীগঞ্জ;Dewanganj=দেওয়ানগঞ্জ;Islampur=ইসলামপুর;Madarganj=মাদারগঞ্জ;Melandaha=মেলান্দহ;Sarishabari=সরিষাবাড়ী",
+    /* Jashore */ "Abhaynagar=অভয়নগর;Bagharpara=বাঘারপাড়া;Chaugachha=চৌগাছা;Jhikargachha=ঝিকরগাছা;Keshabpur=কেশবপুর;Manirampur=মণিরামপুর;Sharsha=শার্শা",
+    /* Jhalokati */ "Jhalokathi=ঝালকাঠি;Jhalokathi Sadar=ঝালকাঠি সদর;Kanthalia=কাঠালিয়া;Nalchhity=নলছিটি;Rajapur=রাজাপুর",
+    /* Jhenaidah */ "Harinakundu=হরিণাকুণ্ডু;Kotchandpur=কোটচাঁদপুর;Maheshpur=মহেশপুর;Shailkupa=শৈলকুপা",
+    /* Joypurhat */ "Akkelpur=আক্কেলপুর;Kalai=কালাই;Khetlal=ক্ষেতলাল;Panchbibi=পাঁচবিবি",
+    /* Khagrachhari */ "Dighinala=দীঘিনালা;Guimara=গুইমারা;Lakkhichhari=লক্ষ্মীছড়ি;Mahalchhari=মহালছড়ি;Manikchhari=মানিকছড়ি;Matiranga=মাটিরাঙ্গা;Panchhari=পানছড়ি;Ramgarh=রামগড়",
+    /* Khulna */ "Batiaghata=বটিয়াঘাটা;Dacope=দাকোপ;Dighalia=দিঘলিয়া;Dumuria=ডুমুরিয়া;Koyra=কয়রা;Paikgachha=পাইকগাছা;Phultala=ফুলতলা;Rupsa=রূপসা;Terokhada=তেরখাদা",
+    /* Kishoreganj */ "Austagram=অষ্টগ্রাম;Bajitpur=বাজিতপুর;Bhairab=ভৈরব;Hossainpur=হোসেনপুর;Itna=ইটনা;Karimganj=করিমগঞ্জ;Katiadi=কটিয়াদী;Kuliarchar=কুলিয়ারচর;Mithamain=মিঠামইন;Nikli=নিকলী;Pakundia=পাকুন্দিয়া;Tarail=তাড়াইল",
+    /* Kurigram */ "Bhurungamari=ভুরুঙ্গামারী;Chilmari=চিলমারী;Nageshwari=নাগেশ্বরী;Phulbari=ফুলবাড়ী;Rajarhat=রাজারহাট;Rajibpur=রাজিবপুর;Roumari=রৌমারী;Ulipur=উলিপুর",
+    /* Kushtia */ "Bheramara=ভেড়ামারা;Daulatpur=দৌলতপুর;Khoksa=খোকসা;Kumarkhali=কুমারখালী",
+    /* Lakshmipur */ "Kamalnagar=কমলনগর;Raipur=রায়পুর;Ramganj=রামগঞ্জ;Ramgati=রামগতি",
+    /* Lalmonirhat */ "Aditmari=আদিতমারী;Hatibandha=হাতীবান্ধা;Patgram=পাটগ্রাম",
+    /* Madaripur */ "Dasar=ডাসার;Kalkini=কালকিনি;Rajoir=রাজৈর;Shibchar=শিবচর",
+    /* Magura */ "Shalikha=শালিখা",
+    /* Manikganj */ "Ghior=ঘিওর;Harirampur=হরিরামপুর;Saturia=সাটুরিয়া;Shibalay=শিবালয়;Singair=সিংগাইর",
+    /* Meherpur */ "Gangni=গাংনী;Mujibnagar=মুজিবনগর",
+    /* Moulvibazar */ "Baralekha=বড়লেখা;Juri=জুড়ী;Kamalganj=কমলগঞ্জ;Kulaura=কুলাউড়া;Rajnagar=রাজনগর;Sreemangal=শ্রীমঙ্গল",
+    /* Munshiganj */ "Gazaria=গজারিয়া;Louhajang=লৌহজং;Sirajdikhan=সিরাজদিখান;Sreenagar=শ্রীনগর;Tongibari=টংগীবাড়ী",
+    /* Mymensingh */ "Bhaluka=ভালুকা;Dhobaura=ধোবাউড়া;Fulbaria=ফুলবাড়িয়া;Fulpur=ফুলপুর;Gafargaon=গফরগাঁও;Gouripur=গৌরীপুর;Haluaghat=হালুয়াঘাট;Ishwarganj=ঈশ্বরগঞ্জ;Muktagachha=মুক্তাগাছা;Nandail=নান্দাইল;Tarakanda=তারাকান্দা;Trishal=ত্রিশাল",
+    /* Naogaon */ "Atrai=আত্রাই;Badalgachhi=বদলগাছী;Dhamoirhat=ধামইরহাট;Mahadebpur=মহাদেবপুর;Manda=মান্দা;Niamatpur=নিয়ামতপুর;Patnitala=পত্নীতলা;Porsha=পোরশা;Raninagar=রাণীনগর;Sapahar=সাপাহার",
+    /* Narail */ "Kalia=কালিয়া",
+    /* Narayanganj */ "Araihazar=আড়াইহাজার;Bandar=বন্দর;Rupganj=রূপগঞ্জ;Sonargaon=সোনারগাঁও",
+    /* Narsingdi */ "Belabo=বেলাবো;Manohardi=মনোহরদী;Palash=পলাশ;Raipura=রায়পুরা;Shibpur=শিবপুর",
+    /* Natore */ "Bagatipara=বাগাতিপাড়া;Baraigram=বড়াইগ্রাম;Gurudaspur=গুরুদাসপুর;Lalpur=লালপুর;Naldanga=নলডাঙ্গা;Singra=সিংড়া",
+    /* Netrakona */ "Atpara=আটপাড়া;Barhatta=বারহাট্টা;Durgapur=দুর্গাপুর;Kalmakanda=কলমাকান্দা;Kendua=কেন্দুয়া;Khaliajuri=খালিয়াজুরী;Madan=মদন;Mohanganj=মোহনগঞ্জ;Purbadhala=পূর্বধলা",
+    /* Nilphamari */ "Dimla=ডিমলা;Domar=ডোমার;Jaldhaka=জলঢাকা;Saidpur=সৈয়দপুর",
+    /* Noakhali */ "Begumganj=বেগমগঞ্জ;Chatkhil=চাটখিল;Companiganj=কোম্পানীগঞ্জ;Hatiya=হাতিয়া;Kabirhat=কবিরহাট;Senbag=সেনবাগ;Sonaimuri=সোনাইমুড়ী;Subarnachar=সুবর্ণচর",
+    /* Pabna */ "Atgharia=আটঘরিয়া;Bera=বেড়া;Bhangura=ভাঙ্গুড়া;Chatmohar=চাটমোহর;Ishwardi=ঈশ্বরদী;Santhia=সাঁথিয়া;Sujanagar=সুজানগর",
+    /* Panchagarh */ "Atowari=আটোয়ারী;Boda=বোদা;Debiganj=দেবীগঞ্জ;Tentulia=তেঁতুলিয়া",
+    /* Patuakhali */ "Bauphal=বাউফল;Dashmina=দশমিনা;Dumki=দুমকি;Galachipa=গলাচিপা;Kalapara=কলাপাড়া;Mirzaganj=মির্জাগঞ্জ;Rangabali=রাঙ্গাবালী",
+    /* Pirojpur */ "Bhandaria=ভান্ডারিয়া;Indurkani=ইন্দুরকানী;Kawkhali=কাউখালী;Mathbaria=মঠবাড়িয়া;Nazirpur=নাজিরপুর;Nesarabad (Swarupkathi)=নেছারাবাদ (স্বরূপকাঠী)",
+    /* Rajbari */ "Baliakandi=বালিয়াকান্দি;Goalanda=গোয়ালন্দ;Kalukhali=কালুখালী;Pangsha=পাংশা",
+    /* Rajshahi */ "Bagha=বাঘা;Bagmara=বাগমারা;Charghat=চারঘাট;Godagari=গোদাগাড়ী;Mohanpur=মোহনপুর;Paba=পবা;Puthia=পুঠিয়া;Tanore=তানোর",
+    /* Rangamati */ "Baghaichhari=বাঘাইছড়ি;Barkal=বরকল;Belaichhari=বিলাইছড়ি;Jurachhari=জুরাছড়ি;Kaptai=কাপ্তাই;Langadu=লংগদু;Naniarchar=নানিয়ারচর;Rajasthali=রাজস্থলী",
+    /* Rangpur */ "Badarganj=বদরগঞ্জ;Gangachara=গঙ্গাচড়া;Kaunia=কাউনিয়া;Mithapukur=মিঠাপুকুর;Pirgachha=পীরগাছা;Pirganj=পীরগঞ্জ;Taraganj=তারাগঞ্জ",
+    /* Satkhira */ "Ashashuni=আশাশুনি;Debhata=দেবহাটা;Kalaroa=কলারোয়া;Shyamnagar=শ্যামনগর;Tala=তালা",
+    /* Shariatpur */ "Bhedarganj=ভেদরগঞ্জ;Damudya=ডামুড্যা;Gosairhat=গোসাইরহাট;Naria=নড়িয়া;Zajira=জাজিরা",
+    /* Sherpur */ "Jhenaigati=ঝিনাইগাতী;Nakla=নকলা;Nalitabari=নালিতাবাড়ী;Sreebardi=শ্রীবরদী",
+    /* Sirajganj */ "Belkuchi=বেলকুচি;Chouhali=চৌহালী;Kamarkhanda=কামারখন্দ;Kazipur=কাজীপুর;Rayganj=রায়গঞ্জ;Shahjadpur=শাহজাদপুর;Tarash=তাড়াশ;Ullapara=উল্লাপাড়া",
+    /* Sunamganj */ "Bishwambharpur=বিশ্বম্ভরপুর;Chhatak=ছাতক;Derai=দিরাই;Dharmapasha=ধর্মপাশা;Dowarabazar=দোয়ারাবাজার;Jagannathpur=জগন্নাথপুর;Jamalganj=জামালগঞ্জ;Madhyanagar=মধ্যনগর;Shalla=শাল্লা;Shantiganj=শান্তিগঞ্জ;Tahirpur=তাহিরপুর",
+    /* Sylhet */ "Balaganj=বালাগঞ্জ;Beanibazar=বিয়ানীবাজার;Bishwanath=বিশ্বনাথ;Dakkhin Surma=দক্ষিণ সুরমা;Fenchuganj=ফেঞ্চুগঞ্জ;Golapganj=গোলাপগঞ্জ;Gowainghat=গোয়াইনঘাট;Jaintapur=জৈন্তাপুর;Kanaighat=কানাইঘাট;Osmaninagar=ওসমানীনগর;Zakiganj=জকিগঞ্জ",
+    /* Tangail */ "Basail=বাসাইল;Bhuanpur=ভুয়াপুর;Delduar=দেলদুয়ার;Dhanbari=ধনবাড়ী;Ghatail=ঘাটাইল;Gopalpur=গোপালপুর;Kalihati=কালিহাতী;Madhupur=মধুপুর;Mirzapur=মির্জাপুর;Nagarpur=নাগরপুর;Sakhipur=সখিপুর",
+    /* Thakurgaon */ "Baliadangi=বালিয়াডাঙ্গী;Haripur=হরিপুর;Ranishankail=রাণীশংকৈল"
+  ].join(';');
+  raw.split(';').forEach(function (p) {
+    var i = p.indexOf('=');
+    if (i > 0) window.DV_BN[p.slice(0, i).trim()] = p.slice(i + 1).trim();
+  });
+})();
+
+/* "<District> Sadar"  ->  "<জেলা> সদর"      "<District> City Corporation"  ->  "<জেলা> সিটি করপোরেশন" */
+window.DV_BN_PATTERNS.push(
+  [/^(.+?) Sadar$/, function (m, n) { var t = window.DVI18N && window.DVI18N.t(n); return (t && t !== n) ? t + " সদর" : m; }],
+  [/^(.+?) City Corporation$/, function (m, n) { var t = window.DVI18N && window.DVI18N.t(n); return (t && t !== n) ? t + " সিটি করপোরেশন" : m; }]
+);
