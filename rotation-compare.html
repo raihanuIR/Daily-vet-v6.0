@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DailyVet | Field Shift — Rotation Explorer</title>
+    <meta name="theme-color" content="#059669" />
+    <link rel="apple-touch-icon" href="assets/dailyvet.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" /></noscript>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
+    <link rel="stylesheet" href="css/climate.css" />
+    <link rel="stylesheet" href="css/climate-map.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <link rel="stylesheet" href="css/skeleton.css" />
+    <link rel="stylesheet" href="css/rotation-compare.css" />
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<main class="cl-wrapper">
+  <section class="container">
+    <div class="cl-header">
+      <div class="cl-header-left">
+        <a href="climate-dashboard.html" class="cl-back-btn" title="Back"><i class="fas fa-arrow-left"></i></a>
+        <div class="cl-header-icon cl-header-icon-emerald"><i class="fas fa-scale-balanced"></i></div>
+        <div class="cl-header-info">
+          <div class="cl-header-titles">
+            <h1 class="cl-header-title" style="color:#1e293b!important">Rotation Explorer</h1>
+            <span class="cl-header-badge cl-header-badge-emerald">
+              <i class="fas fa-satellite"></i><span>Field Shift · NASA data</span>
+            </span>
+          </div>
+          <p class="cl-header-sub" style="color:#64748b!important">
+            Compare multi-season crop &amp; forage rotations — trade-offs, risk &amp; uncertainty with NASA POWER, MODIS &amp; SoilGrids
+          </p>
+        </div>
+      </div>
+      <div class="cl-status-chip"><span class="cl-status-dot"></span><span>LIVE · NASA</span></div>
+    </div>
+  </section>
+
+  <section class="container">
+    <nav class="cl-suite-nav">
+      <a href="climate-dashboard.html" class="cl-nav-pill"><i class="fas fa-gauge-high"></i><span>Home</span></a>
+      <a href="climate-thi.html" class="cl-nav-pill"><i class="fas fa-temperature-high" style="color:#F59E0B"></i><span>Heat Index</span></a>
+      <a href="climate-forage.html" class="cl-nav-pill"><i class="fas fa-seedling" style="color:#10B981"></i><span>Forage Plan</span></a>
+      <a href="rotation-compare.html" class="cl-nav-pill cl-nav-active"><i class="fas fa-scale-balanced" style="color:#059669"></i><span>Rotation</span></a>
+      <a href="climate-outbreak.html" class="cl-nav-pill"><i class="fas fa-triangle-exclamation" style="color:#EF4444"></i><span>Disease Risk</span></a>
+      <a href="climate-flood.html" class="cl-nav-pill"><i class="fas fa-water" style="color:#3B82F6"></i><span>Flood Warning</span></a>
+      <a href="climate-impact.html" class="cl-nav-pill"><i class="fas fa-users-rays" style="color:#8B5CF6"></i><span>Impact</span></a>
+      <a href="climate-air-quality.html" class="cl-nav-pill"><i class="fas fa-wind" style="color:#06B6D4"></i><span>Air & UV</span></a>
+      <a href="climate-map.html" class="cl-nav-pill"><i class="fas fa-map-location-dot" style="color:#6366F1"></i><span>Map</span></a>
+    </nav>
+  </section>
+
+  <section class="container">
+    <div class="rc-wrap" style="padding-left:0;padding-right:0;max-width:none">
+
+      <section class="rc-card">
+        <h2><i class="fas fa-tractor"></i> Farm &amp; priorities</h2>
+
+        <!-- 8 boxes · 2 rows · 4 per row -->
+        <div class="rc-form-grid rc-form-grid-4x2">
+          <div class="rc-field">
+            <label for="rcDistrict">District / field location</label>
+            <select id="rcDistrict"></select>
+          </div>
+          <div class="rc-field">
+            <label for="rcMode">Focus</label>
+            <select id="rcMode">
+              <option value="mixed">Crops + forage (mixed)</option>
+              <option value="crop">Crops only</option>
+              <option value="forage">Forage grasses only</option>
+            </select>
+          </div>
+          <div class="rc-field">
+            <label for="rcCrop">Current / starting crop</label>
+            <select id="rcCrop"></select>
+          </div>
+          <div class="rc-field">
+            <label for="rcSoilType">Soil type</label>
+            <select id="rcSoilType">
+              <option value="loam">Loam</option>
+              <option value="clay">Clay</option>
+              <option value="sandy">Sandy</option>
+              <option value="lowland">Lowland / haor</option>
+            </select>
+          </div>
+          <div class="rc-field">
+            <label for="rcWater">Water availability</label>
+            <select id="rcWater">
+              <option value="scarce">Scarce</option>
+              <option value="moderate" selected>Moderate</option>
+              <option value="abundant">Abundant</option>
+            </select>
+          </div>
+          <div class="rc-field">
+            <label for="rcGoal">Primary goal</label>
+            <select id="rcGoal">
+              <option value="balanced">Balanced</option>
+              <option value="feed">Livestock feed</option>
+              <option value="income">Income / market</option>
+              <option value="soil">Soil recovery</option>
+            </select>
+          </div>
+          <div class="rc-field">
+            <label for="rcLand">Land size (optional)</label>
+            <input id="rcLand" type="text" placeholder="e.g. 50 decimal / 1 acre" />
+          </div>
+          <div class="rc-field">
+            <label for="rcRisk">Risk tolerance</label>
+            <select id="rcRisk">
+              <option value="low">Low — safer sequences</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">Higher — accept more risk</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="rc-field" style="margin-top:0.85rem">
+          <label>Score priority</label>
+          <div class="rc-priority">
+            <label><input type="radio" name="rcPriority" value="balanced" checked><span>Balanced</span></label>
+            <label><input type="radio" name="rcPriority" value="soil"><span>Soil health</span></label>
+            <label><input type="radio" name="rcPriority" value="water"><span>Save water</span></label>
+            <label><input type="radio" name="rcPriority" value="yield"><span>Goal fit</span></label>
+            <label><input type="radio" name="rcPriority" value="risk"><span>Lower risk</span></label>
+          </div>
+        </div>
+        <button type="button" class="rc-btn" id="rcRunBtn">
+          <i class="fas fa-scale-balanced"></i> Compare rotations
+        </button>
+      </section>
+
+      <div id="rcResults" class="rc-hidden">
+        <section class="rc-card">
+          <h2><i class="fas fa-satellite-dish"></i> Field evidence (NASA + soil)</h2>
+          <div class="rc-live" id="rcLiveMetrics"></div>
+        </section>
+
+        <section class="rc-card">
+          <h2><i class="fas fa-layer-group"></i> Compare rotations (trade-offs)</h2>
+          <div class="rc-strategies" id="rcStrategies"></div>
+        </section>
+
+        <section class="rc-card">
+          <h2><i class="fas fa-sliders"></i> What-if — make uncertainty visible</h2>
+          <p style="margin:0 0 .5rem;font-size:.8rem;color:#64748b">Explore heat / rainfall stress without re-fetching satellites.</p>
+          <div class="rc-whatif">
+            <label>Temperature <strong id="rcWhatTempVal">+0°C</strong></label>
+            <input type="range" id="rcWhatTemp" min="-1" max="3" step="1" value="0" />
+          </div>
+          <div class="rc-whatif">
+            <label>Rainfall <strong id="rcWhatRainVal">+0%</strong></label>
+            <input type="range" id="rcWhatRain" min="-40" max="20" step="5" value="0" />
+          </div>
+        </section>
+
+        <section class="rc-card">
+          <h2><i class="fas fa-flask"></i> Evidence, risk &amp; limitations</h2>
+          <div class="rc-evidence" id="rcEvidence"></div>
+        </section>
+
+        <section class="rc-card">
+          <h2><i class="fas fa-print"></i> Seasonal action plan</h2>
+          <div id="rcPrintPlan"></div>
+          <button type="button" class="rc-btn rc-btn-ghost" id="rcPrintBtn" style="margin-top:0.75rem">
+            <i class="fas fa-print"></i> Print / save plan
+          </button>
+        </section>
+      </div>
+
+      <section class="rc-card">
+        <h2><i class="fas fa-book"></i> Crop &amp; forage knowledge base</h2>
+        <p style="margin:0 0 .75rem;font-size:.8rem;color:#64748b">Bangladesh-relevant options with duration, water index, soil-building and source tags. Comparative planning only.</p>
+        <div class="rc-lib" id="rcCropLibrary"></div>
+      </section>
+
+    </div>
+  </section>
+</main>
+
+<script defer src="js/firebase-config.js"></script>
+<script defer src="js/auth.js"></script>
+<script defer src="js/bd-districts.js"></script>
+<script defer src="js/nasa-power-api.js"></script>
+<script defer src="js/dv-fast-fetch.js"></script>
+<script defer src="js/nasa-modis-ndvi.js"></script>
+<script defer src="js/nasa-soilgrids.js"></script>
+<script defer src="js/nasa-climate-engine.js"></script>
+<script defer src="js/grass-health-score.js"></script>
+<script defer src="js/crop-knowledge.js"></script>
+<script defer src="js/rotation-compare.js"></script>
+<script defer src="js/dailyvet-nav.js"></script>
+<script src="js/i18n-bn.js?v=6"></script><script src="js/i18n.js?v=6"></script></body>
+</html>

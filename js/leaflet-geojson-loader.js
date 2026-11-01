@@ -1,0 +1,1 @@
+!function(){"use strict";function e(){if("function"==typeof window.__mapOnDataReady)try{window.__mapOnDataReady()}catch(e){console.warn("[GeoJSON] onDataReady failed:",e.message)}}"loading"===document.readyState?document.addEventListener("DOMContentLoaded",()=>setTimeout(e,100)):setTimeout(e,100)}();
