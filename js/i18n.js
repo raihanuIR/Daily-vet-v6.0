@@ -228,7 +228,7 @@
       'html[lang="bn"] body,html[lang="bn"] input,html[lang="bn"] button,html[lang="bn"] select,html[lang="bn"] textarea' +
       '{font-family:"Noto Sans Bengali",Inter,system-ui,sans-serif}' +
       'html[lang="bn"] body{line-height:1.7}' +
-      'html[lang="bn"] #hrmLiveClock{display:inline-block;min-width:15.5em;font-variant-numeric:tabular-nums;white-space:nowrap}' +
+      'html[lang="bn"] #hrmLiveClock{display:inline-block;min-width:13em;font-variant-numeric:tabular-nums;white-space:nowrap}' +
       '@media print{#dv-lang-toggle{display:none}}';
     document.head.appendChild(s);
     if (!document.querySelector('link[href*="Noto+Sans+Bengali"]')) {
