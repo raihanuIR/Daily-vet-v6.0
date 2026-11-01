@@ -188,22 +188,26 @@
     busy = false;
   }
 
-  var mo = null, pending = [], timer = null;
+  var mo = null;
+  // Runs inside the MutationObserver callback (a microtask), i.e. BEFORE the browser paints:
+  // text the page rewrites (live clock, counters...) is translated before it can be seen in English.
   function onMutations(list) {
-    if (busy) return;
-    list.forEach(function (m) {
-      if (m.type === 'childList') m.addedNodes.forEach(function (n) { pending.push(n); });
-      else if (m.type === 'characterData') pending.push(m.target);
-      else if (m.type === 'attributes') pending.push(m.target);
-    });
-    if (timer) return;
-    timer = setTimeout(function () {
-      timer = null;
-      var batch = pending; pending = [];
-      busy = true;
-      try { batch.forEach(function (n) { if (n.isConnected) walk(n); }); } catch (e) {}
-      busy = false;
-    }, 30);
+    if (lang !== 'bn') return;
+    busy = true;
+    try {
+      for (var i = 0; i < list.length; i++) {
+        var m = list[i];
+        if (m.type === 'childList') {
+          for (var j = 0; j < m.addedNodes.length; j++) { var n = m.addedNodes[j]; if (n.isConnected) walk(n); }
+        } else if (m.type === 'characterData') {
+          if (m.target.isConnected) walk(m.target);
+        } else if (m.type === 'attributes') {
+          if (m.target.isConnected && !skipEl(m.target)) doAttrs(m.target);
+        }
+      }
+    } catch (e) { /* never break the page */ }
+    busy = false;
+    try { mo.takeRecords(); } catch (e) {}   // drop the mutations we just made ourselves
   }
   function startObserver() {
     if (mo || !document.body) return;
@@ -224,6 +228,7 @@
       'html[lang="bn"] body,html[lang="bn"] input,html[lang="bn"] button,html[lang="bn"] select,html[lang="bn"] textarea' +
       '{font-family:"Noto Sans Bengali",Inter,system-ui,sans-serif}' +
       'html[lang="bn"] body{line-height:1.7}' +
+      'html[lang="bn"] #hrmLiveClock{display:inline-block;min-width:15.5em;font-variant-numeric:tabular-nums;white-space:nowrap}' +
       '@media print{#dv-lang-toggle{display:none}}';
     document.head.appendChild(s);
     if (!document.querySelector('link[href*="Noto+Sans+Bengali"]')) {
