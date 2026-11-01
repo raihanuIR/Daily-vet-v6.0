@@ -1382,3 +1382,33 @@ window.DV_BN_PATTERNS.push(
   [/^(.+?) Sadar$/, function (m, n) { var t = window.DVI18N && window.DVI18N.t(n); return (t && t !== n) ? t + " সদর" : m; }],
   [/^(.+?) City Corporation$/, function (m, n) { var t = window.DVI18N && window.DVI18N.t(n); return (t && t !== n) ? t + " সিটি করপোরেশন" : m; }]
 );
+
+/* ===================== Part 12: home risk-map captions, clock & ranking chips ===================== */
+Object.assign(window.DV_BN, {
+  "Live Temp + Humidity (Open-Meteo)": "সরাসরি তাপমাত্রা + আর্দ্রতা (Open-Meteo)",
+  "NASA 7-Day Rain + Soil · Open-Meteo 72h Forecast": "নাসা ৭ দিনের বৃষ্টি + মাটি · Open-Meteo ৭২ ঘণ্টার পূর্বাভাস",
+  "Live Rain/Humidity/Temp · Vector Model": "সরাসরি বৃষ্টি/আর্দ্রতা/তাপমাত্রা · রোগবাহক মডেল",
+  "Open-Meteo CAMS (ECMWF) · Live": "Open-Meteo CAMS (ECMWF) · সরাসরি",
+  "NASA POWER Soil Moisture · Live Temp": "NASA POWER মাটির আর্দ্রতা · সরাসরি তাপমাত্রা",
+  "NASA POWER Soil Moisture · Live Temp": "NASA POWER মাটির আর্দ্রতা · সরাসরি তাপমাত্রা",
+  "Air Quality (AQI)": "বাতাসের মান (AQI)",
+  "Fair": "মোটামুটি",
+  "Poor": "খারাপ",
+  "refreshing…": "হালনাগাদ হচ্ছে…",
+  "Loading…": "লোড হচ্ছে…"
+});
+(function () {
+  var MONTHS = { Jan: "জানুয়ারি", Feb: "ফেব্রুয়ারি", Mar: "মার্চ", Apr: "এপ্রিল", May: "মে", Jun: "জুন",
+                 Jul: "জুলাই", Aug: "আগস্ট", Sep: "সেপ্টেম্বর", Oct: "অক্টোবর", Nov: "নভেম্বর", Dec: "ডিসেম্বর" };
+  window.DV_BN_PATTERNS.push(
+    // live clock, e.g. "01 Nov 2026, 23:32:44"  ->  "০১ নভেম্বর ২০২৬, ২৩:৩২:৪৪"
+    [/^(\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}),? (\d{2}:\d{2}(?::\d{2})?)$/,
+      function (m, d, mon, y, t) { return d + " " + MONTHS[mon] + " " + y + ", " + t; }],
+    // ranking chips, e.g. "1. Chattogram"  ->  "১. চট্টগ্রাম" (only when the name is a known place/word)
+    [/^(\d+)\.\s+(.+?)\s*$/,
+      function (m, n, name) {
+        var t = window.DVI18N && window.DVI18N.t(name);
+        return (t && t !== name) ? n + ". " + t : m;
+      }]
+  );
+})();

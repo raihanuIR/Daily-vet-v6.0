@@ -52,7 +52,11 @@
     if (m && m[2] && (m[1] || m[3]) && (hit = lookup(m[2])) !== null) return m[1] + hit + m[3];
     for (var i = 0; i < PATTERNS.length; i++) {
       var p = PATTERNS[i];
-      if (p[0].test(core)) return bnDigits(core.replace(p[0], p[1]));
+      if (p[0].test(core)) {
+        var r = core.replace(p[0], p[1]);
+        if (r === core) continue;          // pattern matched but decided not to change anything
+        return bnDigits(r);
+      }
     }
     // "Gulshan, Dhaka" / "Dhaka, Bangladesh": translate each comma-separated part we know
     if (core.length < 120 && core.indexOf(',') > 0) {
